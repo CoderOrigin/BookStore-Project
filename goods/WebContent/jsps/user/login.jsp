@@ -19,10 +19,10 @@
 	-->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/css/user/login.css'/>">
 	<script type="text/javascript" src="<c:url value='/jquery/jquery-1.5.1.js'/>"></script>
-	<script src="<c:url value='/js/common.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/common.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='jsps/js/user/login.js'/>"></script>
+</head>
 
-  </head>
-  
   <body>
 	<div class="main">
 	  <div><img src="<c:url value='/images/logo.gif'/>" /></div>
@@ -31,7 +31,7 @@
         <div class="login1">
 	      <div class="login2">
             <div class="loginTopDiv">
-              <span class="loginTop">传智会员登录</span>
+              <span class="loginTop">HelloWorld会员登录</span>
               <span>
                 <a href="<c:url value='/jsps/user/regist.jsp'/>" class="registBtn"></a>
               </span>
@@ -64,13 +64,13 @@
                       <td>验证码</td>
                       <td>
                         <input class="input yzm" type="text" name="verifyCode" id="verifyCode" value=""/>
-                        <img id="vCode" src=""/>
-                        <a id="verifyCode">换张图</a>
+                        <img id="vCode" src="<c:url value='/VerifyCodeServlet' />"/>
+                        <a id="verifyCode" href="javascript: _change()">看不清换一张</a>
                       </td>
                     </tr>
                     <tr>
                       <td height="20px">&nbsp;</td>
-                      <td><label id="verifyCodeError" class="error">${ errors.password }</label></td>
+                      <td><label id="verifyCodeError" class="error">${ errors.verifycode }</label></td>
                     </tr>
                     <tr>
                       <td>&nbsp;</td>

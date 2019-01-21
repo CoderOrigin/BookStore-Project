@@ -30,8 +30,8 @@
     <span class="spanTitle">新用户注册</span>
   </div>
   <div class="divCenter">
-    <form action="<c:url value='/jsps/msg.jsp'/>" method="post">
-    <input type="hidden" name="method" value=""/>
+    <form action="<c:url value='/UserServlet'/>" method="post" id="registform">
+    <input type="hidden" name="method" value="regist"/>
     <table>
       <tr>
         <td class="tdLabel">用户名：</td>
@@ -39,7 +39,7 @@
           <input type="text" name="loginname" id="loginname" class="input" value=""/>
         </td>
         <td class="tdError">
-          <label class="labelError" id="loginnameError">用户名不能为空！</label>
+          <label class="labelError" id="loginnameError"></label>
         </td>
       </tr>
       <tr>
@@ -81,7 +81,7 @@
       <tr>
         <td>&nbsp;</td>
         <td>
-          <span class="verifyCodeImg"><img id="vCode" width="100" src="" /></span>
+          <span class="verifyCodeImg"><img id="vCode" width="100" src="<c:url value='/VerifyCodeServlet' />" /></span>
         </td>
         <td><a href="javascript: _change()">换一张</a></td>
       </tr>
