@@ -2,7 +2,7 @@ $(function() {
 	/*
 	 * 1. 给注册按钮添加submit()事件，完成表单校验
 	 */
-	$("#submit").submit(function(){
+	$("#pwdform").submit(function(){
 		$("#msg").text("");
 		var bool = true;
 		$(".input").each(function() {
@@ -54,7 +54,7 @@ function validateLoginpass() {
 			async: false,
 			type: "POST",
 			dataType: "json",
-			data: {method: "validateLoginpass", loginpass: value},
+			data: {method: "ajaxValidateLoginpass", loginpass: value},
 			url: "/goods/UserServlet",
 			success: function(flag) {
 				if(!flag) {
@@ -125,7 +125,7 @@ function validateVerifyCode() {
 			async: false,
 			type: "POST",
 			dataType: "json",
-			data: {method: "validateVerifyCode", verifyCode: value},
+			data: {method: "ajaxValidateVerifyCode", verifyCode: value},
 			url: "/goods/UserServlet",
 			success: function(flag) {
 				if(!flag) {

@@ -1,3 +1,4 @@
+
 $(function() {
 	/*
 	 * 1. 让登录按钮在得到和失去焦点时切换图片
@@ -14,7 +15,7 @@ $(function() {
 	/*
 	 * 2. 给注册按钮添加submit()事件，完成表单校验
 	 */
-	$("#submit").submit(function(){
+	$("#loginform").submit(function(){
 		$("#msg").text("");
 		var bool = true;
 		$(".input").each(function() {
@@ -112,7 +113,7 @@ function validateVerifyCode() {
 			async: false,
 			type: "POST",
 			dataType: "json",
-			data: {method: "validateVerifyCode", verifyCode: value},
+			data: {method: "ajaxValidateVerifyCode", verifyCode: value},
 			url: "/goods/UserServlet",
 			success: function(flag) {
 				if(!flag) {

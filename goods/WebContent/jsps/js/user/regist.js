@@ -176,7 +176,7 @@ function validateVerifyCode(){
 		$("#verifyCodeError").text("验证码不能为空！");
 		bool = false;
 	} else if(value.length != 4) {//长度校验
-		$("#verifyCodeError").text("错误的验证码！");
+		$("#verifyCodeError").text("验证码错误！");
 		bool = false;
 	} else {
 		$.ajax({//校验验证码是否正确
@@ -188,7 +188,7 @@ function validateVerifyCode(){
 			url: "/goods/UserServlet",
 			success: function(flag) {
 				if(!flag) {
-					$("#verifyCodeError").text("错误的验证码！");
+					$("#verifyCodeError").text("验证码错误！");
 					bool = false;					
 				}
 			}

@@ -21,28 +21,23 @@
 	<link rel="stylesheet" href="<c:url value='/menu/mymenu.css'/>" type="text/css" media="all">
 	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/css/left.css'/>">
 <script language="javascript">
-var bar = new Q6MenuBar("bar", "传智播客网上书城");
+var bar = new Q6MenuBar("bar", "HelloWorld网上书城");
 $(function() {
-	bar.colorStyle = 4;
-	bar.config.imgDir = "<c:url value='/menu/img/'/>";
-	bar.config.radioButton=true;
+	bar.colorStyle = 4;//颜色样式0，1，2，3，4
+	bar.config.imgDir = "<c:url value='/menu/img/'/>";//指定路径的图片
+	bar.config.radioButton=true;//一级分类是否排斥
+	
+	/*
+	*  add参数多代表的意义
+	*  bar.add("程序设计", "Java Javascript", "/goods/jsps/book/list.jsp", "body");
+	*/
+	//html语言可以直接写在JavaScript中
+	<c:forEach items="${parents}" var="parent">
+		<c:forEach items="${parent.children}" var="child">
+			bar.add("${parent.cname}", "${child.cname}", "/goods/jsps/book/list.jsp", "body");
+		</c:forEach>
+	</c:forEach>
 
-	bar.add("程序设计", "Java Javascript", "/goods/jsps/book/list.jsp", "body");
-	bar.add("程序设计", "JSP", "/goods/jsps/book/list.jsp", "body");
-	bar.add("程序设计", "C C++ VC VC++", "/goods/jsps/book/list.jsp", "body");
-	
-	bar.add("办公室用书", "微软Office", "/goods/jsps/book/list.jsp", "body");
-	bar.add("办公室用书", "计算机初级入门", "/goods/jsps/book/list.jsp", "body");
-	
-	bar.add("图形 图像 多媒体", "Photoshop", "/goods/jsps/book/list.jsp", "body");
-	bar.add("图形 图像 多媒体", "3DS MAX", "/goods/jsps/book/list.jsp", "body");
-	bar.add("图形 图像 多媒体", "网页设计", "/goods/jsps/book/list.jsp", "body");
-	bar.add("图形 图像 多媒体", "Flush", "/goods/jsps/book/list.jsp", "body");
-	
-	bar.add("操作系统/系统开发", "Windows", "/goods/jsps/book/list.jsp", "body");
-	bar.add("操作系统/系统开发", "Linux", "/goods/jsps/book/list.jsp", "body");
-	bar.add("操作系统/系统开发", "系统开发", "/goods/jsps/book/list.jsp", "body");
-	
 	$("#menu").html(bar.toString());
 });
 </script>

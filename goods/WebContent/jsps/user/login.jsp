@@ -20,7 +20,18 @@
 	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/css/user/login.css'/>">
 	<script type="text/javascript" src="<c:url value='/jquery/jquery-1.5.1.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/common.js'/>"></script>
-	<script type="text/javascript" src="<c:url value='jsps/js/user/login.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/jsps/js/user/login.js'/>"></script>
+	<script type="text/javascript">
+		/*功能是显示cookie中的值，和进行回显*/
+		// cookie对象其实是一个map，键是String，值是一个个的cookie
+		$(function(){
+		var loginname  =window.decodeURI("${ cookie.loginname.value }");
+		if("${ requestScope.user.loginname }"){
+			loginname = "${ requestScope.user.loginname }";
+		}
+		$("#loginname").val(loginname);
+		});
+	</script>
 </head>
 
   <body>
@@ -37,7 +48,7 @@
               </span>
             </div>
             <div>
-              <form target="_top" action="<c:url value='/UserServlet'/>" method="post" id="loginForm">
+              <form target="_top" action="<c:url value='/UserServlet'/>" method="post" id="loginform">
                 <input type="hidden" name="method" value="login" />
                   <table>
                     <tr>
@@ -46,7 +57,7 @@
                     </tr>
                     <tr>
                       <td width="50">用户名</td>
-                      <td><input class="input" type="text" name="loginname" id="loginname" value="${ user.loginname }"/></td>
+                      <td><input class="input" type="text" name="loginname" id="loginname" /></td>
                     </tr>
                     <tr>
                       <td height="20">&nbsp;</td>
@@ -63,14 +74,14 @@
                     <tr>
                       <td>验证码</td>
                       <td>
-                        <input class="input yzm" type="text" name="verifyCode" id="verifyCode" value=""/>
+                        <input class="input yzm" type="text" name="verifyCode" id="verifyCode" value="${ user.verifyCode }"/>
                         <img id="vCode" src="<c:url value='/VerifyCodeServlet' />"/>
                         <a id="verifyCode" href="javascript: _change()">看不清换一张</a>
                       </td>
                     </tr>
                     <tr>
                       <td height="20px">&nbsp;</td>
-                      <td><label id="verifyCodeError" class="error">${ errors.verifycode }</label></td>
+                      <td><label id="verifyCodeError" class="error"></label></td>
                     </tr>
                     <tr>
                       <td>&nbsp;</td>

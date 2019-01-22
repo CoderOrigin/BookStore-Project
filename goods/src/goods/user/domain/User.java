@@ -16,7 +16,10 @@ public class User {
 	private String reloginpass;
 	private String verifyCode;
 	private String newloginpass;
-	
+		
+	public User() {
+		super();
+	}
 	public String getUid() {
 		return uid;
 	}
@@ -70,6 +73,12 @@ public class User {
 	}
 	public void setNewloginpass(String newloginpass) {
 		this.newloginpass = newloginpass;
+	}
+	@Override
+	public String toString() {
+		return "User [uid=" + uid + ", loginname=" + loginname + ", loginpass=" + loginpass + ", email=" + email
+				+ ", status=" + status + ", activationCode=" + activationCode + ", reloginpass=" + reloginpass
+				+ ", verifyCode=" + verifyCode + ", newloginpass=" + newloginpass + "]";
 	}
 	
 	

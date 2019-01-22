@@ -46,17 +46,23 @@ public class UserDao {
 		return user;
 	}
 	
-	public int findByName(String name) throws SQLException {
-		// 设置sql语句和参数
-		String sql = "SELECT * FROM t_user WHERE loginname=?";
-		User user = qr.query(sql, new BeanHandler<User>(User.class), name);
-		return (user != null) ? 1 : 0;
-	}
 	
-	public int findByEmail(String email) throws SQLException {
+	public User findByActivationCode(String activationCode) throws SQLException {
 		// 设置sql语句和参数
-		String sql = "SELECT * FROM t_user WHERE email=?";
-		User user = qr.query(sql, new BeanHandler<User>(User.class), email);
-		return (user != null) ? 1 : 0;
+		String sql = "SELECT * FROM t_user WHERE activationCode=?";
+		User user = qr.query(sql, new BeanHandler<User>(User.class), activationCode);
+		return user;
+	}
+
+    /**
+     * 修改用户状态
+     * 为了代码的通用性，可以传递一个修改的状态
+     * @param user
+     * @param status
+     * @throws SQLException
+     */
+	public void updateStatus(User user, boolean status) throws SQLException {
+		String sql = "UPDATE t_user SET status=? WHERE uid=?";
+		qr.update(sql, status, user.getUid());
 	}
 }

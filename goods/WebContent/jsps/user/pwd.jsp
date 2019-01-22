@@ -19,6 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/css/user/pwd.css'/>">
 	<script type="text/javascript" src="<c:url value='/jquery/jquery-1.5.1.js'/>"></script>
 	<script src="<c:url value='/js/common.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/jsps/js/user/pwd.js'/>"></script>
   </head>
   
   <body>
@@ -27,7 +28,7 @@
     </div>
 
 	<div class="div1">
-		<form action="<c:url value='/jsps/msg.jsp'/>" method="post" target="_top">
+		<form action="<c:url value='/jsps/msg.jsp'/>" method="post" target="_top" id="pwdform">
 			<input type="hidden" name="method" value=""/>
 		<table>
 			<tr>
@@ -52,7 +53,7 @@
 			<tr>
 				<td align="right"></td>
 				<td>
-				  <img id="vCode" src="" border="1"/>
+				  <img id="vCode" src="<c:url value="/VerifyCodeServlet"/>" border="1"/>
 		    	  <a href="javascript:_change();">看不清，换一张</a>
 				</td>
 			</tr>
