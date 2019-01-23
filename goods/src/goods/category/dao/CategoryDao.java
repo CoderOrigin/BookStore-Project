@@ -18,6 +18,11 @@ import goods.category.domain.Category;
 public class CategoryDao {
 	private TxQueryRunner qr = new TxQueryRunner();
 
+	/**
+	 * 将Map转化为Category，需要处理的pid，找到对应的parent
+	 * @param map
+	 * @return
+	 */
 	private Category toCategory(Map<String, Object> map) {
 		//将cid,cname,desc,封装
 		Category category = CommonUtils.toBean(map, Category.class);
@@ -30,7 +35,12 @@ public class CategoryDao {
 		}
 		return category;
 	}
-	
+	/**
+	 * 将map的List转化为Category的List
+	 * 主要是调用toCategory方法，遍历
+	 * @param mapList
+	 * @return
+	 */
 	private List<Category> toCategoryList(List<Map<String, Object>> mapList){
 		List<Category> categoryList = new ArrayList<Category>();
 		for(Map<String, Object> map: mapList) {
@@ -40,12 +50,22 @@ public class CategoryDao {
 		
 	}
 	
+	/**
+	 * 通过父亲的id找所有的孩子，并返回List
+	 * @param pid
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<Category> findByParent(String pid) throws SQLException{
 		//查找父亲的sql语句
 		String sql = "SELECT * FROM t_category WHERE pid=?";
 		return toCategoryList(qr.query(sql, new MapListHandler(), pid));
 	}
-	
+	/**
+	 * 返回的是所有的一级分类的list,并将一级分类的Children保存下来
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<Category> findAll() throws SQLException {
 		/*
 		 * 1.查询出一级分类
