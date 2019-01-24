@@ -34,7 +34,7 @@ $(function() {
 	//html语言可以直接写在JavaScript中
 	<c:forEach items="${parents}" var="parent">
 		<c:forEach items="${parent.children}" var="child">
-			bar.add("${parent.cname}", "${child.cname}", "/goods/jsps/book/list.jsp", "body");
+			bar.add("${parent.cname}", "${child.cname}", "/goods/BookServlet?method=findByCategory&cid=${child.cid}", "body");
 		</c:forEach>
 	</c:forEach>
 

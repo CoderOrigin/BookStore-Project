@@ -4,19 +4,37 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import cn.itcast.commons.CommonUtils;
 import cn.itcast.jdbc.TxQueryRunner;
 import goods.book.domain.Book;
+import goods.category.domain.Category;
 import goods.pager.Expression;
 import goods.pager.PageBean;
 
 public class BookDao {
 	private TxQueryRunner qr = new TxQueryRunner();
 	
+	/**
+	 * 通过bid查找返回一本书的详细内容
+	 * @param bid
+	 * @return
+	 * @throws SQLException
+	 */
+	public Book findByBid(String bid) throws SQLException {
+		String sql ="SELECT * FROM t_book WHERE bid=?";
+		Map<String,Object> map = qr.query(sql, new MapHandler(), bid);
+		Book book = CommonUtils.toBean(map, Book.class);
+		Category category = CommonUtils.toBean(map, Category.class);
+		book.setCategory(category);
+		return book;
+	}
 	/**
 	 * 通过类别ID查询
 	 * @param cid
@@ -105,7 +123,7 @@ public class BookDao {
 		//1.得到ps
 		Properties pro = new Properties();
 		pro.load(this.getClass().getClassLoader().getResourceAsStream("pageConfig.properties"));
-		int ps = Integer.parseInt((String)pro.get("ps"));
+		int ps = Integer.parseInt((String)pro.get("bookps"));
 		
 		//2.得到tr,总记录数
 		
@@ -131,7 +149,6 @@ public class BookDao {
 		params.add(ps*(pc-1));
 		params.add(ps);
 		List<Book> bookList = qr.query(sql, new BeanListHandler<Book>(Book.class), params.toArray());
-		
 		//4.封装并返回
 		PageBean<Book> pageBean = new PageBean<Book>();
 		pageBean.setPc(pc);

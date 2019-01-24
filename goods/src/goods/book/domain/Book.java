@@ -149,7 +149,7 @@ public class Book {
 		return image_w;
 	}
 
-	public void setImage(String image_w) {
+	public void setImage_w(String image_w) {
 		this.image_w = image_w;
 	}
 
