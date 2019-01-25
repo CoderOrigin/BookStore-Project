@@ -1,12 +1,14 @@
 package goods.book.web.servlet;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.itcast.commons.CommonUtils;
 import cn.itcast.servlet.BaseServlet;
 import goods.book.domain.Book;
 import goods.book.service.BookService;
@@ -90,7 +92,7 @@ public class BookServlet extends BaseServlet {
 		/*
 		 * 1.得到pc，如果没有，则默认为1
 		 * 2.获取url
-		 * 3.获取查询条件，该方法为cid
+		 * 3.获取查询条件，该方法为author
 		 * 4.调用service的查询函数，得到pageBean
 		 * 5.给pageBean设置url，保存pageBean，转发到/jsps/book/list.jsp
 		 */
@@ -102,12 +104,19 @@ public class BookServlet extends BaseServlet {
 		req.setAttribute("pb", pb);
 		return "f:/jsps/book/list.jsp";
 	}
-	
+	/**
+	 * 通过出版社查询
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public String findByPress(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		/*
 		 * 1.得到pc，如果没有，则默认为1
 		 * 2.获取url
-		 * 3.获取查询条件，该方法为cid
+		 * 3.获取查询条件，该方法为press
 		 * 4.调用service的查询函数，得到pageBean
 		 * 5.给pageBean设置url，保存pageBean，转发到/jsps/book/list.jsp
 		 */
@@ -119,7 +128,65 @@ public class BookServlet extends BaseServlet {
 		req.setAttribute("pb", pb);
 		return "f:/jsps/book/list.jsp";
 	}
+	/**
+	 * 通过书名模糊查询
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public String findByBname(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		/*
+		 * 1.得到pc，如果没有，则默认为1
+		 * 2.获取url
+		 * 3.获取查询条件，该方法为bname
+		 * 4.调用service的查询函数，得到pageBean
+		 * 5.给pageBean设置url，保存pageBean，转发到/jsps/book/list.jsp
+		 */
+		int pc = getPc(req);
+		String url = getUrl(req);
+		String bname = req.getParameter("bname");
+		PageBean<Book> pb = bookService.findByBname(bname, pc);
+		pb.setUrl(url);
+		req.setAttribute("pb", pb);
+		return "f:/jsps/book/list.jsp";
+	}
 	
+	/**
+	 * 通过组合条件查询
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public String findByCriteria(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		/*
+		 * 1.得到pc，如果没有，则默认为1
+		 * 2.获取url
+		 * 3.获取查询条件，查询条件有book中的bname，author，press，封装为criteria对象
+		 * 4.调用service的查询函数，得到pageBean
+		 * 5.给pageBean设置url，保存pageBean，转发到/jsps/book/list.jsp
+		 */
+		int pc = getPc(req);
+		String url = getUrl(req);
+		Map<String, String[]> criteriaMap = req.getParameterMap();
+		Book criteria = CommonUtils.toBean(criteriaMap, Book.class);
+		System.out.println(criteria);
+		PageBean<Book> pb = bookService.findByCriteria(criteria, pc);
+		pb.setUrl(url);
+		req.setAttribute("pb", pb);
+		return "f:/jsps/book/list.jsp";
+	}
+	/**
+	 * 加载图书，按照bid查询，返回图书的详细信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public String load (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String bid = req.getParameter("bid");
 		Book book = bookService.load(bid);

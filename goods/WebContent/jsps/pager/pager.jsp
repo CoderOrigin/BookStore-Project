@@ -27,28 +27,27 @@
     <%-- 计算begin和end --%>
     <c:choose>  
       <%-- 如果总页数<=6，那么显示所有页码，即begin=1 end=${pb.tp} --%>
-      <c:when test="${ pb.tp } <= 6">
+      <c:when test="${ pb.tp < 6 }">
         <c:set var="begin" value="1" />
-        <c:set var="end" value="${ pb.tp }" />
+        <c:set var="end" value="${ pb.tp }" />     
       </c:when>
       <c:otherwise>
-        <%-- 设置begin=当前页码-2，end=当前页码+3 --%>
+        <!-- 设置begin=当前页码-2，end=当前页码+3 -->
         <c:set var="begin" value="${ pb.pc-2 }" />
         <c:set var="end" value="${ pb.pc+3 }" />
-        <c:choose>
-          <c:when test="${ begin < 1 }">
-          	<%-- 如果begin<1，那么让begin=1 end=6 --%>
-          	<c:set var="begin" value="1" />
-            <c:set var="end" value="6" />
-          </c:when>
-          <c:when test="${ end > pb.tp }">
-            <%-- 如果end>最大页，那么begin=最大页-5 end=最大页 --%>
-            <c:set var="begin" value="${ pb.tp - 5}" />
-            <c:set var="end" value="${ pb.tp }" />
-          </c:when>
-        </c:choose>
+        <c:if test="${ begin < 1 }">
+          <!-- 如果begin<1，那么让begin=1 end=6 -->
+          <c:set var="begin" value="1" />
+          <c:set var="end" value="6" />
+        </c:if>
+        <c:if test="${ end > pb.tp }">
+          <!-- 如果end>最大页，那么begin=最大页-5 end=最大页 -->
+          <c:set var="begin" value="${ pb.tp - 5}" />
+          <c:set var="end" value="${ pb.tp }" />
+        </c:if>
       </c:otherwise>
     </c:choose>
+    
     <%-- 显示点点点 --%>      
     <c:if test="${ begin > 1 }"><span class="spanApostrophe">...</span></c:if>
     <%-- 显示页码列表 --%>

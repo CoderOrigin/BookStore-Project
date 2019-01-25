@@ -27,7 +27,7 @@ $(function() {
 	$("#selectAll").click(function() {
 		var flag = $(this).attr("checked");//获取全选的状态
 		setAll(flag);//让所有条目复选框与全选同步
-		setJieSuanStyle(flag);//让结算按钮与全选同步
+		setCalculateStyle(flag);//让结算按钮与全选同步
 	});
 	
 	// 给条目复选框添加事件
@@ -36,13 +36,13 @@ $(function() {
 		var allCount = $(":checkbox[name=checkboxBtn]").length;//所有条目复选框个数
 		if(selectedCount == allCount) {//全选了
 			$("#selectAll").attr("checked", true);//勾选全选复选框
-			setJieSuanStyle(true);//使结算按钮可用
+			setCalculateStyle(true);//使结算按钮可用
 		} else if(selectedCount == 0) {//全撤消了
 			$("#selectAll").attr("checked", false);//撤消全选复选框
-			setJieSuanStyle(false);//使结算按钮不可用			
+			setCalculateStyle(false);//使结算按钮不可用			
 		} else {//未全选
 			$("#selectAll").attr("checked", false);//撤消全选复选框
-			setJieSuanStyle(true);//使结算按钮可用
+			setCalculateStyle(true);//使结算按钮可用
 		}
 		showTotal();//重新计算合计
 	});
@@ -88,7 +88,7 @@ function setAll(flag) {
 }
 
 // 设置结算按钮的样式
-function setJieSuanStyle(flag) {
+function setCalculateStyle(flag) {
 	if(flag) {// 有效状态
 		$("#jiesuan").removeClass("kill").addClass("jiesuan");//切换样式
 		$("#jiesuan").unbind("click");//撤消“点击无效”
@@ -126,8 +126,9 @@ function showTotal() {
   </head>
   <body>
 
-
-	<table width="95%" align="center" cellpadding="0" cellspacing="0">
+<c:choose>
+  <c:when test="${ empty cartItemList }">
+    <table width="95%" align="center" cellpadding="0" cellspacing="0">
 		<tr>
 			<td align="right">
 				<img align="top" src="<c:url value='/images/icon_empty.png'/>"/>
@@ -136,13 +137,11 @@ function showTotal() {
 				<span class="spanEmpty">您的购物车中暂时没有商品</span>
 			</td>
 		</tr>
-	</table>  
-
-<br/>
-<br/>
-
-
-<table width="95%" align="center" cellpadding="0" cellspacing="0">
+	</table> 
+  </c:when>
+  
+  <c:otherwise>
+    <table width="95%" align="center" cellpadding="0" cellspacing="0">
 	<tr align="center" bgcolor="#efeae5">
 		<td align="left" width="50px">
 			<input type="checkbox" id="selectAll" checked="checked"/><label for="selectAll">全选</label>
@@ -154,68 +153,30 @@ function showTotal() {
 		<td>操作</td>
 	</tr>
 
-
-
-
-	<tr align="center">
+    <c:forEach items="${ cartItemList }" var ="item">
+      <tr align="center">
 		<td align="left">
-			<input value="12345" type="checkbox" name="checkboxBtn" checked="checked"/>
+			<input value="${ item.cartItemId }" type="checkbox" name="checkboxBtn" checked="checked"/>
 		</td>
 		<td align="left" width="70px">
-			<a class="linkImage" href="<c:url value='/jsps/book/desc.jsp'/>"><img border="0" width="54" align="top" src="<c:url value='/book_img/23254532-1_b.jpg'/>"/></a>
+			<a class="linkImage" href="<c:url value='/BookServlet?method=load&bid=${ item.book.bid }'/>"><img border="0" width="54" align="top" src="<c:url value='/${ item.book.image_b }'/>"/></a>
 		</td>
 		<td align="left" width="400px">
-		    <a href="<c:url value='/jsps/book/desc.jsp'/>"><span>Spring实战(第3版)（In Action系列中最畅销的Spring图书，近十万读者学习Spring的共同选择）</span></a>
+		    <a href="<c:url value='/BookServlet?method=load&bid=${ item.book.bid }'/>"><span>${ item.book.bname }</span></a>
 		</td>
-		<td><span>&yen;<span class="currPrice" id="12345CurrPrice">40.7</span></span></td>
+		<td><span>&yen;<span class="currPrice" id="12345CurrPrice">${ item.book.currPrice }</span></span></td>
 		<td>
-			<a class="jian" id="12345Jian"></a><input class="quantity" readonly="readonly" id="12345Quantity" type="text" value="1"/><a class="jia" id="12345Jia"></a>
+			<a class="jian" id="${ item.cartItemId }Jian"></a><input class="quantity" readonly="readonly" id="${ item.cartItemId }Quantity" type="text" value="${ item.quantity }"/><a class="jia" id="${ item.cartItemId }Jia"></a>
 		</td>
 		<td width="100px">
-			<span class="price_n">&yen;<span class="subTotal" id="12345Subtotal">40.7</span></span>
+			<span class="price_n">&yen;<span class="subTotal" id="${ item.cartItemId }Subtotal">${ item.subtotal }</span></span>
 		</td>
 		<td>
 			<a href="<c:url value='/jsps/cart/list.jsp'/>">删除</a>
 		</td>
-	</tr>
-
-
-
-
-
-	<tr align="center">
-		<td align="left">
-			<input value="12346" type="checkbox" name="checkboxBtn" checked="checked"/>
-		</td>
-		<td align="left" width="70px">
-			<a class="linkImage" href="<c:url value='/jsps/book/desc.jsp'/>"><img border="0" width="54" align="top" src="<c:url value='/book_img/23254532-1_b.jpg'/>"/></a>
-		</td>
-		<td align="left" width="400px">
-		    <a href="<c:url value='/jsps/book/desc.jsp'/>"><span>Spring实战(第3版)（In Action系列中最畅销的Spring图书，近十万读者学习Spring的共同选择）</span></a>
-		</td>
-		<td><span>&yen;<span class="currPrice" id="12346CurrPrice">40.7</span></span></td>
-		<td>
-			<a class="jian" id="12346Jian"></a><input class="quantity" readonly="readonly" id="12346Quantity" type="text" value="1"/><a class="jia" id="12346Jia"></a>
-		</td>
-		<td width="100px">
-			<span class="price_n">&yen;<span class="subTotal" id="12346Subtotal">40.7</span></span>
-		</td>
-		<td>
-			<a href="<c:url value='/jsps/cart/list.jsp'/>">删除</a>
-		</td>
-	</tr>
-
-
-
-
-
-
-
-
-
-
-
-
+	  </tr>
+    </c:forEach>
+	
 
 
 	
@@ -237,7 +198,8 @@ function showTotal() {
 		<input type="hidden" name="cartItemIds" id="cartItemIds"/>
 		<input type="hidden" name="method" value="loadCartItems"/>
 	</form>
-
+  </c:otherwise>
+</c:choose>
 
   </body>
 </html>

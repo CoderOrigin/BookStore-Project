@@ -22,6 +22,11 @@
 	
 	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/css/book/desc.css'/>">
 	<script src="<c:url value='/jsps/js/book/desc.js'/>"></script>
+	<script type="text/javascript">
+	function(){
+		
+	}
+	</script>
   </head>
   
   <body>
@@ -61,9 +66,9 @@
 			</tr>
 		</table>
 		<div class="divForm">
-			<form id="form1" action="<c:url value='/jsps/cart/list.jsp'/>" method="post">
-				<input type="hidden" name="method" value=""/>
-				<input type="hidden" name="bid" value=""/>
+			<form id="form1" action="<c:url value='/CartItemServlet'/>" method="post">
+				<input type="hidden" name="method" value="add"/>
+				<input type="hidden" name="bid" value="${ book.bid }"/>
   				我要买：<input id="cnt" style="width: 40px;text-align: center;" type="text" name="quantity" value="1"/>件
   			</form>
   			<a id="btn" href="javascript:$('#form1').submit();"></a>
