@@ -22,11 +22,9 @@ public class CartItemDao {
 		if(map==null || map.size()==0) return null;
 		CartItem item = CommonUtils.toBean(map, CartItem.class);
 		Book book = CommonUtils.toBean(map, Book.class);
-		User owner = CommonUtils.toBean(map, User.class);
-		
+		User owner = CommonUtils.toBean(map, User.class);		
 		item.setBook(book);
 		item.setOwner(owner);
-		
 		return item;
 	}
 	
@@ -45,7 +43,7 @@ public class CartItemDao {
 	 */
 	public List<CartItem> findByUser(String uid) throws SQLException{
 		//因为要显示书的信息，因为必须把书的各种信息也查到
-		String sql = "select * from t_cartItem ci, t_book b where ci.bid=b.bid and uid=? order by ci.orderBy";
+		String sql = "select * from t_cartItem c, t_book b where c.bid=b.bid and uid=? order by c.orderBy";
 		List<Map<String, Object>> mapList = qr.query(sql, new MapListHandler(), uid);
 		return toCartItemList(mapList);
 	} 
@@ -75,6 +73,18 @@ public class CartItemDao {
 		qr.update(sql, params);
 	}
 	/**
+	 * 通过id查询购物车信息
+	 * @param cartItemId
+	 * @return
+	 * @throws SQLException
+	 */
+	public CartItem findById(String cartItemId) throws SQLException {
+		//需要详细信息！
+		String sql = "SELECT * From t_cartItem c,t_book b Where c.bid=b.bid AND cartItemId=? order by c.orderBy";
+		Map<String,Object> map =  qr.query(sql, new MapHandler(), cartItemId);
+		return toCartItem(map);
+	}
+	/**
 	 * 添加新的cartItem
 	 * @param cartItem
 	 * @throws SQLException
@@ -88,15 +98,36 @@ public class CartItemDao {
 		Object[] params = {cartItemId, quantity, bid, uid};
 		qr.update(sql, params);
 	}
-	
+	/**
+	 * 根据一个带逗号的字符串，查询cartItem，并删除
+	 * @param cartItemIds
+	 * @throws SQLException
+	 */
 	public void batchDelete(String cartItemIds) throws SQLException {
 		Object[] params = cartItemIds.split(",");
-		String sql = toWhereSql(params.length);
+		String sql = "DELETE FROM t_cartItem WHERE" + toWhereSql(params.length);
 		qr.update(sql, params);
 	}
-	
+	/**
+	 * 加载被选中的购物车信息，生成订单，所以信息要重新查询
+	 * @param cartItemIds
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<CartItem> loadCartItems(String cartItemIds) throws SQLException{
+		//用于加载被选中的购物车信息，生成订单，所以信息要重新查询
+		Object[] params = cartItemIds.split(",");
+		String sql = "SELECT * FROM t_cartItem c, t_book b Where c.bid=b.bid AND" + toWhereSql(params.length) + " order by c.orderBy";
+		List<Map<String, Object>> mapList = qr.query(sql, new MapListHandler(), params);
+		return toCartItemList(mapList);
+	}
+	/**
+	 * 生成 cartItemId 需要不确定参数个数的 不含WHERE关键字的 where语句
+	 * @param len
+	 * @return
+	 */
 	private String toWhereSql(int len) {
-		StringBuilder whereSql  = new StringBuilder("DELETE FROM t_cartItemIds WHERE cartItemIds in (");
+		StringBuilder whereSql  = new StringBuilder(" cartItemId in (");
 		for(int i=0;i<len;i++) {
 			whereSql.append("?");
 			if(i<len-1) {

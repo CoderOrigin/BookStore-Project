@@ -47,38 +47,65 @@ $(function() {
 		showTotal();//重新计算合计
 	});
 	
+	//给删除按钮添加事件
+	$(".delete").click(function(){
+		if(confirm("真的要删除该条目吗？")){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	
 	// 给jia、jian添加事件
-	$(".jian").click(function() {
-		var cartItemId = $(this).attr("id").substring(0, 5);
-		var quantity = Number($("#" + cartItemId + "Quantity").val());
-		if(quantity == 1) {
-			if(confirm("您是否真要删除该条目？")) {
-				alert("删除成功！");		
+	//<a class="jian" id="${ item.cartItemId }Jian"></a>
+	//<input class="quantity" readonly="readonly" id="${ item.cartItemId }Quantity" type="text" value="${ item.quantity }"/>
+	//<a class="jia" id="${ item.cartItemId }Jia"></a>
+	$(".jian").click(function(){
+		//需要拿到Id和页面上原来的quantity,然后调用共同的sendUpdate异步请求方法
+		var cartItemId = $(this).attr("id").substring(0,32);
+		var quantity = $("#"+ cartItemId +"Quantity").val();
+		if(quantity == 1 ){//是否删除该购物车
+			if(confirm("是否要删除该商品？")){
+				location = "/goods/CartItemServlet?method=batchDelete&cartItemIds=" + cartItemId;
 			}
-		} else {
+		}else{
 			sendUpdate(cartItemId, quantity-1);
 		}
 	});
-	$(".jia").click(function() {
-		var cartItemId = $(this).attr("id").substring(0, 5);
-		var quantity = Number($("#" + cartItemId + "Quantity").val());
-		sendUpdate(cartItemId, quantity+1);
+	
+	$(".jia").click(function(){
+		//需要拿到Id和页面上原来的quantity,然后调用共同的sendUpdate异步请求方法
+		var cartItemId = $(this).attr("id").substring(0,32);
+		var quantity = $("#"+ cartItemId +"Quantity").val();
+		sendUpdate(cartItemId, Number(quantity)+1);
+	});
+	
+	//给生成订单添加方法
+	$("#form1").submit(function(){
+		var cartItemArry = new Array();
+		$(":checkbox[name=checkboxBtn][checked=true]").each(function(){
+			cartItemArry.push($(this).val());
+		});
+		$("#cartItemIds").val(cartItemArry.toString());
+		return true;
 	});
 });
 
-// 异步请求，修改数量
-function sendUpdate(cartItemId, quantity) {
-	/*
-	 1. 通过cartItemId找到输入框元素
-	 2. 通过cartItemId找到小计元素
-	*/
-	var input = $("#" + cartItemId + "Quantity");
-	var subtotal = $("#" + cartItemId + "Subtotal");
-	var currPrice = $("#" + cartItemId + "CurrPrice");
-
-	input.val(quantity);
-	subtotal.text(round(currPrice.text() * quantity, 2));
-	showTotal();
+//发送更改数量的异步请求
+function sendUpdate(cartItemId, quantity){
+	$.ajax({
+		url:"/goods/CartItemServlet",
+		data:{method:"ajaxUpdateQuantity",cartItemId:cartItemId,quantity:quantity},
+		async:false,
+		cache:false,
+		type:"POST",
+		dataType:"json",
+		success:function(result){//找到对应id的购物车信息，更新信息
+			$("#" + cartItemId +"Quantity").val(result.quantity);
+			$("#" + cartItemId +"Subtotal").text(result.subtotal);
+			showTotal();
+		}
+	});
 }
 
 // 设置所有条目复选框
@@ -119,7 +146,16 @@ function showTotal() {
 	$("#total").text(round(total, 2));
 }
 
-
+//批量删除
+function batchDelete(){
+	if(confirm("是否要删除你选中的条目？")){
+		var cartItemArry = new Array();
+		$(":checkbox[name=checkboxBtn][checked=true]").each(function(){
+			cartItemArry.push($(this).val());
+		});
+		location = "/goods/CartItemServlet?method=batchDelete&cartItemIds=" + cartItemArry;
+	}
+}
 
 
 </script>
@@ -172,7 +208,7 @@ function showTotal() {
 			<span class="price_n">&yen;<span class="subTotal" id="${ item.cartItemId }Subtotal">${ item.subtotal }</span></span>
 		</td>
 		<td>
-			<a href="<c:url value='/jsps/cart/list.jsp'/>">删除</a>
+			<a class="delete" href="<c:url value='/CartItemServlet?method=batchDelete&cartItemIds=${ item.cartItemId }'/>">删除</a>
 		</td>
 	  </tr>
     </c:forEach>
@@ -182,7 +218,7 @@ function showTotal() {
 	
 	<tr>
 		<td colspan="4" class="tdBatchDelete">
-			<a href="javascript:alert('批量删除成功');">批量删除</a>
+			<a href="javascript:batchDelete();">批量删除</a>
 		</td>
 		<td colspan="3" align="right" class="tdTotal">
 			<span>总计：</span><span class="price_t">&yen;<span id="total"></span></span>
@@ -190,11 +226,11 @@ function showTotal() {
 	</tr>
 	<tr>
 		<td colspan="7" align="right">
-			<a href="<c:url value='/jsps/cart/showitem.jsp'/>" id="jiesuan" class="jiesuan"></a>
+			<a href="javascript:$('#form1').submit();" id="jiesuan" class="jiesuan"></a>
 		</td>
 	</tr>
 </table>
-	<form id="form1" action="<c:url value='/jsps/cart/showitem.jsp'/>" method="post">
+	<form id="form1" action="<c:url value='/CartItemServlet'/>" method="post">
 		<input type="hidden" name="cartItemIds" id="cartItemIds"/>
 		<input type="hidden" name="method" value="loadCartItems"/>
 	</form>

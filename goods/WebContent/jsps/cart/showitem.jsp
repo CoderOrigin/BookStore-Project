@@ -25,20 +25,23 @@
 
 <script type="text/javascript">
 	//计算合计
-	$(function() {
+	$(
+	function() {
 		var total = 0;
 		$(".subtotal").each(function() {
 			total += Number($(this).text());
 		});
-		$("#total").text(round(total, 2));
+		$("#total").text(round(total, 2));	
 	});
+	
+	
 </script>
   </head>
   
   <body>
-<form id="form1" action="<c:url value='/jsps/order/ordersucc.jsp'/>" method="post">
-	<input type="hidden" name="cartItemIds" value=""/>
-	<input type="hidden" name="method" value=""/>
+<form id="form1" action="<c:url value='/OrderServlet'/>" method="post">
+	<input type="hidden" name="cartItemIds" value="${ cartItemIds }"/>
+	<input type="hidden" name="method" value="createOrder"/>
 <table width="95%" align="center" cellpadding="0" cellspacing="0">
 	<tr bgcolor="#efeae5">
 		<td width="400px" colspan="5"><span style="font-weight: 900;">生成订单</span></td>
@@ -50,43 +53,22 @@
 		<td>数量</td>
 		<td>小计</td>
 	</tr>
-
-
-
+	
+<c:forEach items="${ cartItemList }" var="item">
 	<tr align="center">
 		<td align="right">
-			<a class="linkImage" href="<c:url value='/jsps/book/desc.jsp'/>"><img border="0" width="54" align="top" src="<c:url value='/book_img/23254532-1_b.jpg'/>"/></a>
+			<a class="linkImage" href="<c:url value='/BookServlet?method=load&bid=${ item.book.bid }'/>"><img border="0" width="54" align="top" src="<c:url value='/${ item.book.image_b }'/>"/></a>
 		</td>
 		<td align="left">
-			<a href="<c:url value='/jsps/book/desc.jsp'/>"><span>Spring实战(第3版)（In Action系列中最畅销的Spring图书，近十万读者学习Spring的共同选择）</span></a>
+			<a href="<c:url value='/BookServlet?method=load&bid=${ item.book.bid }'/>"><span>${ item.book.bname }</span></a>
 		</td>
-		<td>&yen;40.7</td>
-		<td>1</td>
+		<td>&yen;${ item.book.currPrice }</td>
+		<td>${ item.quantity }</td>
 		<td>
-			<span class="price_n">&yen;<span class="subtotal">40.7</span></span>
+			<span class="price_n">&yen;<span class="subtotal">${ item.subtotal }</span></span>
 		</td>
 	</tr>
-	
-	
-	
-	
-	<tr align="center">
-		<td align="right">
-			<a class="linkImage" href="<c:url value='/jsps/book/desc.jsp'/>"><img border="0" width="54" align="top" src="<c:url value='/book_img/23254532-1_b.jpg'/>"/></a>
-		</td>
-		<td align="left">
-			<a href="<c:url value='/jsps/book/desc.jsp'/>"><span>Spring实战(第3版)（In Action系列中最畅销的Spring图书，近十万读者学习Spring的共同选择）</span></a>
-		</td>
-		<td>&yen;40.7</td>
-		<td>1</td>
-		<td>
-			<span class="price_n">&yen;<span class="subtotal">40.7</span></span>
-		</td>
-	</tr>
-
-
-
-
+</c:forEach>
 
 
 	<tr>

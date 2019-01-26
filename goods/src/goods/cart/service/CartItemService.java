@@ -8,11 +8,11 @@ import goods.cart.dao.CartItemDao;
 import goods.cart.domain.CartItem;
 
 public class CartItemService {
-	private CartItemDao cartdao = new CartItemDao();
+	private CartItemDao cartDao = new CartItemDao();
 
 	public List<CartItem> myCart(String uid) {
 		try {
-			return cartdao.findByUser(uid);
+			return cartDao.findByUser(uid);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -28,15 +28,56 @@ public class CartItemService {
 		String uid = cartItem.getOwner().getUid();
 		String bid = cartItem.getBook().getBid();
 		try {
-			CartItem currCart = cartdao.findByUidAndBid(uid, bid);
+			CartItem currCart = cartDao.findByUidAndBid(uid, bid);
 			if(currCart == null) {
 				String cartItemId = CommonUtils.uuid();
 				cartItem.setCartItemId(cartItemId);
-				cartdao.addCartItem(cartItem);
+				cartDao.addCartItem(cartItem);
 			}else {
 				int quantity = currCart.getQuantity()+ cartItem.getQuantity();
-				cartdao.updateQuantity(currCart.getCartItemId(), quantity);
+				cartDao.updateQuantity(currCart.getCartItemId(), quantity);
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	/**
+	 * 批量删除功能，直接调用的Dao层方法
+	 * @param cartItemIds
+	 */
+	public void batchDelete(String cartItemIds) {
+		try {
+			cartDao.batchDelete(cartItemIds);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	/**
+	 * 使用ID和quantity来更新某个购物车商品的信息，并返回新的购物车商品信息
+	 * @param cartItemId
+	 * @param quantity
+	 * @return
+	 */
+	public CartItem updateQuantity(String cartItemId, int quantity) {
+		/*
+		 * 使用dao层的update，更新
+		 * 再使用id查询，返回新的cartItem，因为不一定修改成功
+		 */
+		try {
+			cartDao.updateQuantity(cartItemId, quantity);
+			return cartDao.findById(cartItemId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}	
+	}
+	/**
+	 * 加载被选中的购物车信息
+	 * @param cartItemIds
+	 * @return
+	 */
+	public List<CartItem> loadCartItems(String cartItemIds){
+		try {
+			return cartDao.loadCartItems(cartItemIds);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
