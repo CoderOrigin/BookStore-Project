@@ -104,6 +104,8 @@ public class OrderServlet extends BaseServlet {
 		 * 调用service完成添加
 		 * 保存，转发到success页面
 		 */
+		//处理post请求的encoding
+		req.setCharacterEncoding("utf-8");
 		//得到CartItem
 		String cartItemIds = req.getParameter("cartItemIds");
 		List<CartItem> cartItems = cartItemService.loadCartItems(cartItemIds);
@@ -119,7 +121,7 @@ public class OrderServlet extends BaseServlet {
 		//获取total
 		BigDecimal total = new BigDecimal("0");
 		for(CartItem cartItem: cartItems) {
-			total.add(new BigDecimal(cartItem.getSubtotal()+ ""));
+			total = total.add(new BigDecimal(cartItem.getSubtotal()+ ""));
 		}
 		order.setTotal(total.doubleValue());
 		
@@ -137,7 +139,6 @@ public class OrderServlet extends BaseServlet {
 		}
 		order.setOrderItems(orderItems);
 		
-		System.out.println(order);
 		orderService.addOrder(order);
 		
 		//还要先删除购物车条目

@@ -121,13 +121,11 @@ public class OrderDao {
 		int len = order.getOrderItems().size();
 		Object[][] paramss = new Object[len][];
 		for(int i=0; i<len;i++) {
-			OrderItem oi = order.getOrderItems().get(i);
-			System.out.println(oi);
-			params[i] =new Object[]{oi.getOrderItemId(), oi.getQuantity(), oi.getSubtotal(),oi.getBook().getBname(),
+			OrderItem oi = order.getOrderItems().get(i);	
+			paramss[i] =new Object[]{oi.getOrderItemId(), oi.getQuantity(), oi.getSubtotal(),oi.getBook().getBid(),
 					oi.getBook().getBname(), oi.getBook().getCurrPrice(), oi.getBook().getImage_b(),
 					oi.getOrder().getOid()};
 		}
-		System.out.println(paramss.toString());
 		qr.batch(sql, paramss);
 	}
 	
