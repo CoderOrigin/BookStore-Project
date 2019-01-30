@@ -139,12 +139,28 @@ public class OrderServlet extends BaseServlet {
 		}
 		order.setOrderItems(orderItems);
 		
-		orderService.addOrder(order);
+		//添加和删除放一起，如果出现差错，都回滚
+		orderService.addOrder(order, cartItemIds);
 		
-		//还要先删除购物车条目
-		cartItemService.batchDelete(cartItemIds);
+//		//还要先删除购物车条目，这里有问题，如果回滚 购物车信息还是被删除了
+//		cartItemService.batchDelete(cartItemIds);
 		req.setAttribute("order", order);
 		return "/jsps/order/ordersucc.jsp";
+	}
+	
+
+	public String desc(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		/*
+		 * 要根据bid查找详细信息，还要有btn参数，确定是取消还是确认收货
+		 * 
+		 * 
+		 */
+		String oid = req.getParameter("oid");
+		Order order = orderService.loadOrder(oid);
+		req.setAttribute("order", order);
+		req.setAttribute("btn", req.getParameter("btn"));
+		
+		return "f:/jsps/order/desc.jsp";
 	}
 
 }

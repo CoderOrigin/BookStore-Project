@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
@@ -129,4 +130,10 @@ public class OrderDao {
 		qr.batch(sql, paramss);
 	}
 	
+	public Order loadOrder(String oid) throws SQLException {
+		String sql = "SELECT * From t_Order WHERE oid=?";
+		Order order =  qr.query(sql, new BeanHandler<Order>(Order.class), oid);
+		order.setOrderItems(loadOrderItemList(order.getOid()));
+		return order;
+	}
 }

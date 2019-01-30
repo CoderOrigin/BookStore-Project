@@ -39,7 +39,7 @@
 			
 			<c:forEach items="${ pb.beanList }" var="order">
 		        <tr class="tt">
-					<td width="320px">订单号：<a  href="<c:url value='/jsps/order/desc.jsp'/>">${ order.oid }</a></td>
+					<td width="320px">订单号：<a  href="<c:url value='/OrderServlet?method=desc&oid=${ order.oid }'/>">${ order.oid }</a></td>
 					<td width="200px">下单时间：${ order.ordertime }</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
@@ -69,13 +69,13 @@
 						</c:choose>
 					</td>
 					<td>
-					<a href="<c:url value='/jsps/order/desc.jsp'/>">查看</a><br/>
+					<a href="<c:url value='/OrderServlet?method=desc&oid=${ order.oid }'/>">查看</a><br/>
 					<c:if test="${ order.status eq 1 }">
-						<a href="<c:url value='/jsps/order/desc.jsp'/>">支付</a><br/>
-						<a href="<c:url value='/jsps/order/desc.jsp'/>">取消</a><br/>						
+						<a href="<c:url value='/OrderServlet?method=desc&oid=${ order.oid }'/>">支付</a><br/>
+						<a href="<c:url value='/OrderServlet?method=desc&oid=${ order.oid }&btn=cancel'/>">取消</a><br/>						
 					</c:if>
 					<c:if test="${ order.status eq 3 }">
-						<a href="<c:url value='/jsps/order/desc.jsp'/>">确认收货</a><br/>
+						<a href="<c:url value='/OrderServlet?method=desc&oid=${ order.oid }&btn=confirm'/>">确认收货</a><br/>
 					</c:if>
 					</td>
 				</tr>	
