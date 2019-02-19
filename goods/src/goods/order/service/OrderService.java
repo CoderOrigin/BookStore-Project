@@ -56,5 +56,21 @@ public class OrderService {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public int queryStatus(String oid) {
+		try {
+			return orderDao.queryStatus(oid);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void changeStatus(String oid, int status) {
+		try {
+			orderDao.changeStatus(oid, status);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

@@ -81,10 +81,10 @@
 	  <a href="<c:url value='/jsps/order/pay.jsp'/>" class="pay"></a><br/>
 	</c:if>
 	<c:if test="${ btn == 'cancel' }">
-      <a id="cancel" href="javascript:alert('订单已取消！');">取消订单</a><br/>
+      <a id="cancel" href="<c:url value='/OrderServlet?method=cancel&oid=${ order.oid }'/>">取消订单</a><br/>
     </c:if>
     <c:if test="${ btn == 'confirm' }">
-	  <a id="confirm" href="javascript:alert('交易成功！');">确认收货</a><br/>
+	  <a id="confirm" href="<c:url value='/OrderServlet?method=confirm&oid=${ order.oid }'/>">确认收货</a><br/>
 	</c:if>	
 		</div>
 	</div>

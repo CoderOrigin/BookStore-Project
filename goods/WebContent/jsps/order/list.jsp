@@ -17,8 +17,8 @@
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/css/order/list.css'/>" />
-	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/pager/pager.css'/>" />
-    <script type="text/javascript" src="<c:url value='/jsps/pager/pager.js'/>"></script>
+	<link rel="stylesheet" type="text/css" href="<c:url value='/jsps/pager/pager.css'/>" />	
+	<script type="text/javascript" src="<c:url value='/jquery/jquery-1.5.1.js'/>"></script>
   </head>
   
   <body>

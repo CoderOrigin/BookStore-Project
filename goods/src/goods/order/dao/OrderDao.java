@@ -129,11 +129,25 @@ public class OrderDao {
 		}
 		qr.batch(sql, paramss);
 	}
-	
+	//载入订单
 	public Order loadOrder(String oid) throws SQLException {
 		String sql = "SELECT * From t_Order WHERE oid=?";
 		Order order =  qr.query(sql, new BeanHandler<Order>(Order.class), oid);
 		order.setOrderItems(loadOrderItemList(order.getOid()));
 		return order;
+	}
+	
+	//查询订单状态
+	public int queryStatus(String oid) throws SQLException {
+		String sql = "SELECT status FROM t_Order WHERE oid=?";
+		Number status = (Number) qr.query(sql, new ScalarHandler(), oid);
+		return status.intValue();
+	}
+	
+	//修改订单状态
+	public void changeStatus(String oid, int status) throws SQLException {
+		String sql = "UPDATE t_Order SET status=? WHERE oid=?";
+		Object[] params = {status, oid};
+		qr.update(sql, params);
 	}
 }

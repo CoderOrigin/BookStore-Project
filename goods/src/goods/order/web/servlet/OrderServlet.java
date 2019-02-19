@@ -89,6 +89,14 @@ public class OrderServlet extends BaseServlet {
 		return "/jsps/order/list.jsp";
 	}
 	
+	/**
+	 * 创建订单，需要创建order对象
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public String createOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		/*
 		 * 功能分析：
@@ -148,12 +156,17 @@ public class OrderServlet extends BaseServlet {
 		return "/jsps/order/ordersucc.jsp";
 	}
 	
-
+	/**
+	 * 订单详情，需要根据oid载入订单
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public String desc(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		/*
 		 * 要根据bid查找详细信息，还要有btn参数，确定是取消还是确认收货
-		 * 
-		 * 
 		 */
 		String oid = req.getParameter("oid");
 		Order order = orderService.loadOrder(oid);
@@ -161,6 +174,40 @@ public class OrderServlet extends BaseServlet {
 		req.setAttribute("btn", req.getParameter("btn"));
 		
 		return "f:/jsps/order/desc.jsp";
+	}
+	
+	public String cancel(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		/*
+		 * 需要接受oid，查询状态，如果是1，修改为5,取消成功
+		 * 保存成功信息，转发到msg.jsp
+		 */
+		String oid = req.getParameter("oid");
+		if(orderService.queryStatus(oid) == 1) {
+			orderService.changeStatus(oid, 5);
+			req.setAttribute("code", "success");
+			req.setAttribute("msg", "订单取消成功！");
+		} else {
+			req.setAttribute("code", "error");
+			req.setAttribute("msg", "不可以取消");
+		}
+		return "f:/jsps/msg.jsp";
+	}
+	
+	public String confirm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		/*
+		 * 需要接受oid，查询状态，如果是3，修改为4,交易成功
+		 * 保存成功信息，转发到msg.jsp
+		 */
+		String oid = req.getParameter("oid");
+		if(orderService.queryStatus(oid) == 3) {
+			orderService.changeStatus(oid, 4);
+			req.setAttribute("code", "success");
+			req.setAttribute("msg", "确认收货成功！");
+		} else {
+			req.setAttribute("code", "error");
+			req.setAttribute("msg", "不可以确认收货");
+		}
+		return "f:/jsps/msg.jsp";
 	}
 
 }
